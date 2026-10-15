@@ -1,0 +1,20 @@
+# IDE, OS, and Editor Settings
+.idea/
+*.iml
+.DS_Store
+out/
+.mvn/
+
+# Global Safety Net: Ignore compiled target folders for ALL microservices
+**/target/
+
+# Local Maven wrapper scripts (cleaner to drop if using global maven installations)
+**/mvnw
+**/mvnw.cmd
+
+# Runtime Logs and Environmental DB Storage
+*.log
+postgres_data/
+
+# Optional: Ignore local secrets if you use separate profiles later
+**/application-local.yml
