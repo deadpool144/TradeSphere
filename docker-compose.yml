@@ -4,17 +4,18 @@ services:
     image: postgres:16-alpine
     container_name: trading_data
     environment:
-      POSTGRES_DB: trade_db
+      POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: pass123
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init-multiple-dbs.sql:/docker-entrypoint-initdb.d/init-multiple-dbs.sql
     networks:
       - trading-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d trade_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 5s
       timeout: 5s
       retries: 5

@@ -2,7 +2,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/trade_db
+    url: jdbc:postgresql://localhost:5433/user_db
     username: postgres
     password: pass123
     driver-class-name: org.postgresql.Driver
@@ -26,7 +26,7 @@ server:
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 86400000
-  reefresh-expiration: 604800000
+  refresh-expiration: 604800000
 
 management:
   endpoints:

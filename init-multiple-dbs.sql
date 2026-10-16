@@ -1,0 +1,4 @@
+CREATE DATABASE trade_db;
+CREATE DATABASE user_db;
+CREATE DATABASE market_db;
+CREATE DATABASE portfolio_db;
