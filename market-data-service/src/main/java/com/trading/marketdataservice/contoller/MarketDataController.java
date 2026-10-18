@@ -30,7 +30,7 @@ public class MarketDataController {
 
     }
 
-    @GetMapping("/stocke/{symbol}")
+    @GetMapping("/stocks/{symbol}")
     public ResponseEntity<StockPrice> getStockPrice(@PathVariable String symbol){
         return ResponseEntity.ok(
                 marketDataService.getPrice(symbol.toUpperCase()));

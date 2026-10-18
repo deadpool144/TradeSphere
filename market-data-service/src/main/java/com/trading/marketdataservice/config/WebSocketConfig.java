@@ -8,11 +8,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 /**
  *  working
- *   client coonect to ws endpoint
+ *   client connect to ws endpoint
  *   sub to topic/prices/{symbol}
  *   server pub to topic
- *   client update in real time- no pooling needed
- *
+ *   client update in real time - no pooling needed
  *   similar to zerodha .... stream real time prices
  */
 
@@ -24,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         //topic prefixed with /topic - broadcast to all subs
         registry.enableSimpleBroker("/topic");
-        //application desitination prefix
+        //application destination prefix
         //client messages to /app are routed to @messagingMapping methods
         registry.setApplicationDestinationPrefixes("/app");
 
@@ -33,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry){
 
         //websocket endpoints - client connect here
-        //sockJs fallbaack for browser that dont support websocket
+        //sockJs fallback for browser that don't support websocket
         registry
                 .addEndpoint("/ws")
                 .setAllowedOriginPatterns("*")
