@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
-@FeignClient
+@FeignClient(name = "market-data-service", url="${market.service.url}")
 public interface MarketDataClient {
 
     @GetMapping("/api/v1/market/stocks/{symbol}")
