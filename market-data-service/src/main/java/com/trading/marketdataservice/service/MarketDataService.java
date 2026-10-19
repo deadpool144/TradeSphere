@@ -7,6 +7,8 @@ import com.trading.marketdataservice.repository.StockRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -25,7 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MarketDataService {
+@Order(2)
+public class MarketDataService implements CommandLineRunner {
 
     private final StockRepository stockRepository;
     private final Random random=new Random();
@@ -45,8 +48,8 @@ public class MarketDataService {
      *  postConstruct - runs  when context is ready
      */
 
-    @PostConstruct
-    public void initializePrices(){
+    @Override
+    public void run(String... args){
 
         log.info("loading stock data...");
 
@@ -93,24 +96,21 @@ public class MarketDataService {
         }
 
         stockPrices.forEach((stockSymbol, currentPrice) ->{
-            BigDecimal oldPrice=currentPrice.getPrice();
+            BigDecimal oldPrice = currentPrice.getPrice();
 
-            double priceMovement=(random.nextDouble()-0.5*0.5);
+            // Random movement between -0.25% and +0.25%
+            double priceMovement = (random.nextDouble() - 0.5) * 0.5;
 
-            BigDecimal priceChange= oldPrice
-                    .multiply(BigDecimal
-                            .valueOf(priceMovement/100))
+            BigDecimal priceChange = oldPrice
+                    .multiply(BigDecimal.valueOf(priceMovement / 100))
                     .setScale(2, RoundingMode.HALF_UP);
 
-            BigDecimal newPrice=oldPrice
-                    .add(priceChange)
+            BigDecimal newPrice = oldPrice.add(priceChange)
                     .setScale(2, RoundingMode.HALF_UP);
 
-            // prevent -ve price
 
-            if(newPrice.compareTo(oldPrice)<=0){
-                newPrice=BigDecimal.valueOf(1);
-
+            if (newPrice.compareTo(BigDecimal.ZERO) <= 0) {
+                newPrice = new BigDecimal("0.01");
             }
 
             BigDecimal changeAmount=newPrice

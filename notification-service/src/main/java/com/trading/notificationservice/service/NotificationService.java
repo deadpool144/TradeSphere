@@ -72,7 +72,8 @@ public class NotificationService {
                     userId,
                     "Welcom to stock trading platform",
                     String.format(
-                            "Welcome %s! %s added to your wallet balance"
+                            "Welcome %s ! %s added to your wallet balance",
+                            firstName,walletBalance
                     ));
 
         }

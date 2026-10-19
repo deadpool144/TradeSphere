@@ -44,6 +44,7 @@ public class Order {
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal totalAmount;
 
+    @Column(columnDefinition = "TEXT")
     private String failureReason;
     @CreationTimestamp
     private LocalDateTime createdAt;

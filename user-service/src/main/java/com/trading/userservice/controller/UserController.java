@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("api/v1/users")
+@RequestMapping("/api/v1/users")
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<AuthResponse> register(
             @Valid @RequestBody RegisterRequest request){
 
-
+        log.info("REST request to register user with email: {}", request.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.register(request));
@@ -37,6 +37,7 @@ public class UserController {
     public ResponseEntity<AuthResponse> login(
             @Valid @RequestBody LoginRequest request){
 
+        log.info("REST request to login user with email: {}", request.getEmail());
 
         return ResponseEntity.ok(userService.login(request));
     }

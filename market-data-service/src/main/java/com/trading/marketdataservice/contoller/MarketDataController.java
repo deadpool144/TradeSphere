@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/market")
+@RequestMapping("/api/v1/market")
 @Slf4j
 @RequiredArgsConstructor
 public class MarketDataController {
@@ -37,7 +37,7 @@ public class MarketDataController {
     }
 
 
-    @GetMapping("/stocks.list")
+    @GetMapping({"/stocks/list", "/stocks.list"})
     public ResponseEntity<List<Stock>> getStockList(){
         return ResponseEntity.ok(
                 marketDataService.getAllStocks());

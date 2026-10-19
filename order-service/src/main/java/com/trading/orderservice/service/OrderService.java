@@ -45,6 +45,7 @@ public class OrderService {
      */
 
     public Order placeOrder(OrderRequest request){
+        // add ai service
 
         log.info("placing {} order : {} x {} for user {}",
                 request.getType(), request.getQuantity(),

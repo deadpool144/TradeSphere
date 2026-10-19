@@ -47,14 +47,16 @@ public class PortfolioService {
                 BigDecimal invested =holding.getTotalInvested();
                 BigDecimal pnl = holdingValue.subtract(invested);
 
-                BigDecimal pnlpercent = pnl.divide(invested, RoundingMode.HALF_UP)
-                        .multiply(BigDecimal.valueOf(100))
-                        .setScale(2, RoundingMode.HALF_UP);
+                BigDecimal pnlpercent = invested.compareTo(BigDecimal.ZERO) > 0
+                        ? pnl.divide(invested, 4, RoundingMode.HALF_UP)
+                            .multiply(BigDecimal.valueOf(100))
+                            .setScale(2, RoundingMode.HALF_UP)
+                        : BigDecimal.ZERO;
 
                 Map<String,Object> item = new HashMap<>();
                 item.put("symbol",holding.getSymbol());
                 item.put("quantity",holding.getQuantity());
-                item.put("averageBuyPric",holding.getAverageBuyPrice());
+                item.put("averageBuyPrice",holding.getAverageBuyPrice());
                 item.put("currentPrice",currentPrice);
                 item.put("invested",invested);
                 item.put("pnl",pnl);
@@ -77,7 +79,7 @@ public class PortfolioService {
         BigDecimal totalPnl = currentValue.subtract(totalInvested);
         BigDecimal totalPnlPercen = totalInvested
                 .compareTo(BigDecimal.ZERO)> 0
-                ? totalPnl.divide(totalInvested, RoundingMode.HALF_UP)
+                ? totalPnl.divide(totalInvested, 4, RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(100))
                 .setScale(2,RoundingMode.HALF_UP)
                 : BigDecimal.ZERO;

@@ -7,17 +7,21 @@ import com.trading.userservice.dto.RegisterRequest;
 import com.trading.userservice.dto.UserResponse;
 import com.trading.userservice.entity.User;
 import com.trading.userservice.repository.UserRepository;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.security.Key;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -29,6 +33,13 @@ public class UserService {
     private  final PasswordEncoder passwordEncoder;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+
+    @Value("${jwt.refresh-expiration}")
+    private long refreshExpiration;
     private static final String USER_REGISTER_TOPIC = "user.registered";
 
     // REGISTER
@@ -122,21 +133,41 @@ public class UserService {
 
     // helper
     private String generateAccessToken(String userId, String email) {
-        log.debug("Generating Access Token for user identifier: {}", userId);
-        return "access-token-placeholder-for-" + email;
+        return Jwts.builder()
+                .claim("userId",userId)
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis()+jwtExpiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
+
     private String generateRefreshToken(String userId) {
-        // TODO: Replace placeholder with your real structural refresh token generation engine
-        log.debug("Generating Refresh Token for user identifier: {}", userId);
-        return "refresh-token-placeholder-uuid-" + java.util.UUID.randomUUID();
+        return Jwts.builder()
+                .claim("userId",userId)
+                .setSubject(userId)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis()+refreshExpiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     private AuthResponse buildAuthResponse(User user, String accessToken, String refreshToken) {
         AuthResponse response = new AuthResponse();
-        // Adjust these field mappings below to perfectly match your AuthResponse.java layout parameters
+        response.setUserId(user.getId());
         response.setAccessToken(accessToken);
         response.setRefreshToken(refreshToken);
         response.setEmail(user.getEmail());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setWalletBalance(user.getWalletBalance());
+        response.setTokenType("Bearer");
+
         return response;
     }
 

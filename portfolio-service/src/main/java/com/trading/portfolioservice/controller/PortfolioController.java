@@ -18,11 +18,17 @@ public class PortfolioController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<Map<String,Object>> getMyPortfolio(@RequestHeader("X-User_Id") String userId) {
+    public ResponseEntity<Map<String,Object>> getMyPortfolio(
+            @RequestHeader(value = "X-User-Id", required = false) String userIdHyphen,
+            @RequestHeader(value = "X-User_Id", required = false) String userIdUnderscore) {
+
+        String userId = userIdHyphen != null ? userIdHyphen : userIdUnderscore;
+        if (userId == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
         return ResponseEntity.ok(
                 portfolioService.getPortfolio(userId));
-
     }
 
 

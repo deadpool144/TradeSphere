@@ -37,10 +37,10 @@ public class PortfolioEventConsumer {
             log.info("Updating portfolio - user : {} {} x {} at {}",
                     userId, symbol, quantity, price);
 
-            if("Buy".equals(type)){
+            if ("BUY".equalsIgnoreCase(type)){
                 addHoldings(userId,symbol,quantity,price);
             }
-            else  if("SELL".equals(type)){
+            else if ("SELL".equalsIgnoreCase(type)){
                 removeHoldings(userId,symbol,quantity);
             }
 
@@ -76,13 +76,16 @@ public class PortfolioEventConsumer {
             holding.setTotalInvested(
                     price.multiply(BigDecimal.valueOf(quantity)));
 
+            holdingRepository.save(holding);
+            log.info("Holding created : {} {} shares of {}",
+                    userId, quantity, symbol);
         }
         else {
             //already holding this stock - update avg price
 
             int newQuantity = quantity + holding.getQuantity();
             BigDecimal newInvested = holding.getTotalInvested()
-                    .add(price.multiply(BigDecimal.valueOf(newQuantity)));
+                    .add(price.multiply(BigDecimal.valueOf(quantity)));
             BigDecimal newAverageBuyPrice = newInvested
                     .divide(BigDecimal.valueOf(newQuantity), 2, RoundingMode.HALF_UP);
 
@@ -120,7 +123,7 @@ public class PortfolioEventConsumer {
                     userId,symbol);
         }
         else {
-            BigDecimal newInvested = holding.getTotalInvested()
+            BigDecimal newInvested = holding.getAverageBuyPrice()
                     .multiply(BigDecimal.valueOf(newQuantity));
             holding.setQuantity(newQuantity);
             holding.setTotalInvested(newInvested);

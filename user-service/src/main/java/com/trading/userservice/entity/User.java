@@ -31,8 +31,10 @@ public class User {
     private String lastName;
 
     @Column(nullable = false, precision = 15, scale = 2)
+    @Builder.Default
     private BigDecimal walletBalance=BigDecimal.ZERO;
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private UserStatus status=UserStatus.ACTIVE;
 
     @CreationTimestamp

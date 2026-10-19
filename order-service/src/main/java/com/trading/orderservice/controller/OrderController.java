@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api /v1/orders")
+@RequestMapping("/api/v1/orders")
 @Slf4j
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
+    @PostMapping
     public ResponseEntity<Order> placeOrder(
             @RequestHeader("X-User-Id") String userId,
             @Valid @RequestBody OrderRequest request){
@@ -31,6 +32,7 @@ public class OrderController {
                 .body(orderService.placeOrder(request));
     }
 
+    @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrder(
             @PathVariable String orderId,
             @RequestHeader("X-User-Id")  String userId){
@@ -46,6 +48,7 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
+    @GetMapping({"", "/my"})
     public ResponseEntity<List<Order>> getMyOrders(
             @RequestHeader("X-User-Id")  String userId){
 
