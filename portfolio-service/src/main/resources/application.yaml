@@ -2,7 +2,7 @@ spring:
   application:
     name: portfolio-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/user_db
+    url: jdbc:postgresql://localhost:5433/portfolio_db
     username: postgres
     password: pass123
     driver-class-name: org.postgresql.Driver

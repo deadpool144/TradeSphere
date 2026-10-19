@@ -100,6 +100,7 @@ public class PortfolioEventConsumer {
 
     }
 
+
     private void removeHoldings(String userId, String symbol, int quantity){
 
         Holding holding = holdingRepository
