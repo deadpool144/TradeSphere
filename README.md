@@ -1,10 +1,10 @@
-# TradeForge 
+# TradeSphere
 
 A **microservices-based stock trading platform** built with Java and Spring Boot.
 
 TradeForge is an educational backend project focused on building a stock trading system using independently developed services.
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 - **Language:** Java
 - **Framework:** Spring Boot
